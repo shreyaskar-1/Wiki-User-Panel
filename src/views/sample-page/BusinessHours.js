@@ -59,7 +59,7 @@ const BusinessHoursTab = () => {
                     value={day.open}
                     disabled={!day.isOpen}
                     onChange={handleTimeChange(index, 'open')}
-                    sx={{ color: 'white' }}
+                    sx={{ color: 'white', border: '1px solid #262626' }}
                   >
                     {/* Replace with your timing options */}
                     <MenuItem value="8:00 AM">8:00 AM</MenuItem>
@@ -77,7 +77,7 @@ const BusinessHoursTab = () => {
                     value={day.close}
                     disabled={!day.isOpen}
                     onChange={handleTimeChange(index, 'close')}
-                    sx={{ color: 'white' }}
+                    sx={{ color: 'white' , border: '1px solid #262626' }}
                   >
                     {/* Replace with your timing options */}
                     <MenuItem value="5:00 PM">5:00 PM</MenuItem>
