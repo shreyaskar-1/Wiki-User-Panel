@@ -8,6 +8,9 @@ import CardTemplate from './CardTemplate';
 import BusinessHours from './BusinessHours';
 import ServicePage from './ServicePage';
 import Testimonials from './Testimonials';
+import Appointments from './Appointments';
+import SocialLinks from './SocialLinks';
+
 
 const MyCards = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -376,6 +379,16 @@ const MyCards = () => {
       {selectedTab === 4 && (
         <CardContent>
           <Testimonials /> 
+        </CardContent>
+      )}
+      {selectedTab === 5 && (
+        <CardContent>
+          <Appointments /> 
+        </CardContent>
+      )}
+      {selectedTab === 6 && (
+        <CardContent>
+          <SocialLinks /> 
         </CardContent>
       )}
       {/* Add content for other tabs */}
