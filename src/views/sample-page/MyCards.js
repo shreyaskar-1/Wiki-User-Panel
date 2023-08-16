@@ -4,6 +4,10 @@ import PageContainer from 'src/components/container/PageContainer';
 import DashboardCard from '../../components/shared/DashboardCard';
 import { IconEdit } from '@tabler/icons';
 import Icon1 from 'src/assets/images/icons/Icon 1.png';
+import CardTemplate from './CardTemplate';
+import BusinessHours from './BusinessHours';
+import ServicePage from './ServicePage';
+import Testimonials from './Testimonials';
 
 const MyCards = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -354,7 +358,26 @@ const MyCards = () => {
           </Card>
         </CardContent>
       )}
-
+      {selectedTab === 1 && (
+        <CardContent>
+          <CardTemplate /> 
+        </CardContent>
+      )}
+      {selectedTab === 2 && (
+        <CardContent>
+          <BusinessHours /> 
+        </CardContent>
+      )}
+      {selectedTab === 3 && (
+        <CardContent>
+          <ServicePage /> 
+        </CardContent>
+      )}
+      {selectedTab === 4 && (
+        <CardContent>
+          <Testimonials /> 
+        </CardContent>
+      )}
       {/* Add content for other tabs */}
     </PageContainer>
   );
