@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import { Typography, Button, Grid, Checkbox, FormControl, Select, MenuItem } from '@mui/material';
-import Icon1 from 'src/assets/images/icons/delete.png';
-import Icon2 from 'src/assets/images/icons/add.png';
-
+import {
+  Typography,
+  Button,
+  Grid,
+  Checkbox,
+  FormControl,
+  Modal,
+  Paper,
+  Input,
+} from '@mui/material';
+import { DeleteOutline } from '@mui/icons-material';
 
 const Appointments = () => {
   const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -13,6 +20,9 @@ const Appointments = () => {
     close: '',
     isOpen: false,
   })));
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedToDelete, setSelectedToDelete] = useState(null);
 
   const handleCheckboxChange = (index) => (event) => {
     const newAppointments = [...appointments];
@@ -26,12 +36,24 @@ const Appointments = () => {
     setAppointments(newAppointments);
   };
 
-  const handleFreeClick = () => {
-    // Handle the free logic here
+  const handleAddTimeSlot = () => {
+    const newAppointments = [...appointments];
+    newAppointments.push({
+      day: '',
+      open: '',
+      close: '',
+      isOpen: false,
+    });
+    setAppointments(newAppointments);
   };
 
-  const handlePaidClick = () => {
-    // Handle the paid logic here
+  const handleDeleteTimeSlot = () => {
+    if (selectedToDelete !== null) {
+      const newAppointments = appointments.filter((_, index) => index !== selectedToDelete);
+      setAppointments(newAppointments);
+      setSelectedToDelete(null);
+      setIsModalOpen(false);
+    }
   };
 
   const handleSaveClick = () => {
@@ -65,40 +87,37 @@ const Appointments = () => {
                     {day.day}
                   </Typography>
                 </Grid>
-                <Grid item xs={1}>
-                  <Select
+                <Grid item xs={2}>
+                  <Input
                     value={day.open}
                     onChange={handleTimeChange(index, 'open')}
-                    sx={{ color: 'white', border: '1px solid #262626' }}
-                  >
-                    {/* Replace with your timing options */}
-                    <MenuItem value="8:00 AM">8:00 AM</MenuItem>
-                    <MenuItem value="9:00 AM">9:00 AM</MenuItem>
-                    {/* ... */}
-                  </Select>
+                    sx={{ color: 'white', border: '1px solid #262626', padding: '6px' }}
+                    placeholder="Open"
+                    type="time" // Use type="time" for time input
+                  />
                 </Grid>
                 <Grid item xs={1}>
                   <Typography variant="body1" sx={{ color: 'white' }}>
                     To
                   </Typography>
                 </Grid>
-                <Grid item xs={1}>
-                  <Select
+                <Grid item xs={2}>
+                  <Input
                     value={day.close}
                     onChange={handleTimeChange(index, 'close')}
-                    sx={{ color: 'white', border: '1px solid #262626' }}
-                  >
-                    {/* Replace with your timing options */}
-                    <MenuItem value="5:00 PM">5:00 PM</MenuItem>
-                    <MenuItem value="6:00 PM">6:00 PM</MenuItem>
-                    {/* ... */}
-                  </Select>
+                    sx={{ color: 'white', border: '1px solid #262626', padding: '6px' }}
+                    placeholder="Close"
+                    type="time" // Use type="time" for time input
+                  />
                 </Grid>
                 <Grid item xs={1}>
-                  <img src={Icon1} alt="Icon 1" style={{ maxWidth: '20%', maxHeight: '20%' }} />
-                </Grid>
-                <Grid item xs={5}>
-                  <img src={Icon2} alt="Icon 1" style={{ maxWidth: '12%', maxHeight: '12%' }} />
+                  <DeleteOutline
+                    onClick={() => {
+                      setSelectedToDelete(index);
+                      setIsModalOpen(true);
+                    }}
+                    sx={{ color: 'white', cursor: 'pointer' }}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -108,19 +127,64 @@ const Appointments = () => {
           <Button
             variant="contained"
             sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px', }}
-            onClick={handleFreeClick}
+            onClick={handleAddTimeSlot}
           >
-            Free
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{ borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: '#131392', }}
-            onClick={handlePaidClick}
-          >
-            Paid
+            Add Time Slot
           </Button>
         </div>
       </FormControl>
+
+      {/* Confirmation Modal */}
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Paper
+          style={{
+            padding: '2rem',
+            background: 'black',
+            width: '400px',
+            borderRadius: '18px',
+          }}
+        >
+          <Typography
+            variant="h6"
+            style={{
+              marginBottom: '1rem',
+              color: 'white',
+              display: 'relative',
+              textAlign: 'center',
+            }}
+          >
+            Confirm Deletion
+          </Typography>
+          <Typography variant="body1" sx={{ color: 'white', marginBottom: '1rem' }}>
+            Are you sure you want to delete this time slot?
+          </Typography>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              sx={{ background: '#FF0000', color: 'white', marginRight: '10px' }}
+              onClick={handleDeleteTimeSlot}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{ borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: '#131392' }}
+              onClick={() => setIsModalOpen(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </Paper>
+      </Modal>
+
       <div style={{ display: 'flex', marginTop: '20px' }}>
         <Button
           variant="contained"
