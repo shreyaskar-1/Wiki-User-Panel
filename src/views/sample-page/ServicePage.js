@@ -39,13 +39,11 @@ const ServicePage = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchInput, setSearchInput] = useState('');
   const [filteredServices, setFilteredServices] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    serviceUrl: '',
-    description: '',
-    icon: null,
-  });
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -62,26 +60,60 @@ const ServicePage = () => {
     setFilteredServices(filtered);
   };
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
+  const handleOpenAddModal = () => {
+    setIsAddModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleOpenViewModal = (service) => {
+    setSelectedService(service);
+    setIsViewModalOpen(true);
   };
 
-  const handleSubmit = (event) => {
+  const handleCloseViewModal = () => {
+    setSelectedService(null);
+    setIsViewModalOpen(false);
+  };
+
+  const handleOpenEditModal = (service) => {
+    setSelectedService(service);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setSelectedService(null);
+    setIsEditModalOpen(false);
+  };
+
+  const handleOpenDeleteModal = (service) => {
+    setSelectedService(service);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setSelectedService(null);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleAddSubmit = (event) => {
     event.preventDefault();
-    // Handle the form submission logic here
-    console.log(formData);
+    // Handle the form submission logic for adding a new service
+  };
+
+  const handleView = () => {
+    // Handle view logic here
+  };
+
+  const handleEditSubmit = (event) => {
+    event.preventDefault();
+    // Handle the form submission logic for editing a service
+  };
+
+  const handleDelete = () => {
+    // Handle delete logic here
   };
 
   const services = [
@@ -89,7 +121,6 @@ const ServicePage = () => {
     { id: 2, name: 'Branding2', url: 'https://example.com/service2' },
     // Add more service data as needed
   ];
-
 
   return (
     <div>
@@ -120,7 +151,6 @@ const ServicePage = () => {
             marginRight: '1rem', // Add right margin for spacing
           }}
         />
-
         <Button
           variant="contained"
           startIcon={<AddCircleOutline />}
@@ -129,7 +159,7 @@ const ServicePage = () => {
             color: 'white',
             marginRight: '1rem',
           }}
-          onClick={handleOpenModal}
+          onClick={handleOpenAddModal}
         >
           Add Service
         </Button>
@@ -186,7 +216,10 @@ const ServicePage = () => {
                       <Button
                         aria-controls={`action-menu-${service.id}`}
                         aria-haspopup="true"
-                        onClick={handleMenuOpen}
+                        onClick={(event) => {
+                          handleMenuOpen(event);
+                          setSelectedService(service);
+                        }}
                         endIcon={<MoreVert />}
                       />
                       <Menu
@@ -196,9 +229,24 @@ const ServicePage = () => {
                         open={Boolean(anchorEl)}
                         onClose={handleMenuClose}
                       >
-                        <MenuItem onClick={handleMenuClose}>View</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
+                        <MenuItem onClick={() => {
+                          handleOpenViewModal(service);
+                          handleMenuClose();
+                        }}>
+                          View
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                          handleOpenEditModal(service);
+                          handleMenuClose();
+                        }}>
+                          Edit
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                          handleOpenDeleteModal(service);
+                          handleMenuClose();
+                        }}>
+                          Delete
+                        </MenuItem>
                       </Menu>
                     </TableCell>
                   </TableRow>
@@ -208,189 +256,407 @@ const ServicePage = () => {
           </TableContainer>
         </CardContent>
       </Card>
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: '2rem' }}>
-        <Typography
-          sx={{
-            color: '#FFFFFF80',
-            fontWeight: 'bold',
-            fontSize: '16px',
-            paddingLeft: 1,
-            marginRight: '0.5rem',
-          }}
-        >
-          Show
-        </Typography>
-        <Select
-          variant="outlined"
-          value={10}
-          sx={{
-            background: 'black',
-            color: '#FFFFFF80',
-            borderColor: 'white',
-            border: '1px solid #262626',
-          }}
-        >
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={20}>20</MenuItem>
-          <MenuItem value={30}>30</MenuItem>
-          <MenuItem value={40}>40</MenuItem>
-        </Select>
-        <Typography
-          sx={{
-            color: '#FFFFFF80',
-            fontWeight: 'bold',
-            fontSize: '16px',
-            paddingLeft: 1,
-            marginRight: '0.5rem',
-          }}
-        >
-          Showing 1 Results
-        </Typography>
-      </div>
 
-      {/* Modal for adding a new service */}
+      {/* Add Service Modal */}
       <Modal
-  open={isModalOpen}
-  onClose={handleCloseModal}
-  style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}
->
-  <Paper
-    style={{
-      padding: '2rem',
-      background: 'black',
-      width: '800px',
-      borderRadius: '18px',
-    }}
-  >
-    <IconButton
-      onClick={handleCloseModal}
-      sx={{ position: 'absolute', top: 0, right: 0 }}
-    >
-      <IconX />
-    </IconButton>
-    <Typography
-      variant="h6"
-      style={{
-        marginBottom: '1rem',
-        color: 'white',
-        display: 'relative',
-        textAlign: 'center', // Center-align the text
-      }}
-    >
-      Add New Service
-    </Typography>
-    <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" sx={{ color: 'white' }}>
-            Name
-          </Typography>
-          <TextField
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            fullWidth
-            sx={{ background: '#262626', borderRadius: '12px' }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" sx={{ color: 'white' }}>
-            Service URL
-          </Typography>
-          <TextField
-            name="serviceUrl"
-            value={formData.serviceUrl}
-            onChange={handleChange}
-            fullWidth
-            sx={{ background: '#262626', borderRadius: '12px' }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" sx={{ color: 'white' }}>
-            Description
-          </Typography>
-          <TextField
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            fullWidth
-            multiline
-            rows={4}
-            sx={{ background: '#262626', borderRadius: '12px' }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" sx={{ color: 'white' }}>
-            Icon
-          </Typography>
-          <label
-            htmlFor="icon-upload"
-            style={{ width: '100%', cursor: 'pointer' }}
-          >
-            <input
-              id="icon-upload"
-              name="Select"
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              onChange={(e) => {
-                const file = e.target.files[0];
-                setFormData((prevData) => ({
-                  ...prevData,
-                  icon: file,
-                }));
-              }}
-            />
-            <TextField
-              type="text"
-              value={formData.icon ? formData.icon.name : ''}
-              fullWidth
-              readOnly
-              onClick={(e) => {
-                const fileInput = document.getElementById('icon-upload');
-                if (fileInput) {
-                  fileInput.click();
-                }
-              }}
-              sx={{
-                background: '#262626',
-                borderRadius: '12px',
-                marginBottom: '1rem',
-                cursor: 'pointer',
-              }}
-            />
-          </label>
-        </Grid>
-      </Grid>
-      <div
+        open={isAddModalOpen}
+        onClose={handleCloseAddModal}
         style={{
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'center',
-          marginTop: '20px',
         }}
       >
-        <Button
-          variant="contained"
-          sx={{
-            background:
-              'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)',
-            color: 'white',
-            marginRight: '10px',
-            width: '110px',
+        <Paper
+          style={{
+            padding: '2rem',
+            background: 'black',
+            width: '800px',
+            borderRadius: '18px',
           }}
-          type="submit"
         >
-          Save
-        </Button>
-      </div>
-    </form>
-  </Paper>
-</Modal>
+          <IconButton
+            onClick={handleCloseAddModal}
+            sx={{ position: 'absolute', top: 0, right: 0 }}
+          >
+            <IconX />
+          </IconButton>
+          <Typography
+            variant="h6"
+            style={{
+              marginBottom: '1rem',
+              color: 'white',
+              display: 'relative',
+              textAlign: 'center', // Center-align the text
+            }}
+          >
+            Add New Service
+          </Typography>
+          <form onSubmit={handleAddSubmit} style={{ width: '100%' }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Name
+                </Typography>
+                <TextField
+                  name="name"
+                  value={'' /* Add your state value here */}
+                  onChange={() => {} /* Add your change handler here */}
+                  fullWidth
+                  sx={{ background: '#262626', borderRadius: '12px' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Service URL
+                </Typography>
+                <TextField
+                  name="serviceUrl"
+                  value={'' /* Add your state value here */}
+                  onChange={() => {} /* Add your change handler here */}
+                  fullWidth
+                  sx={{ background: '#262626', borderRadius: '12px' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Description
+                </Typography>
+                <TextField
+                  name="description"
+                  value={'' /* Add your state value here */}
+                  onChange={() => {} /* Add your change handler here */}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  sx={{ background: '#262626', borderRadius: '12px' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Icon
+                </Typography>
+                <label
+                  htmlFor="icon-upload"
+                  style={{ width: '100%', cursor: 'pointer' }}
+                >
+                  <input
+                    id="icon-upload"
+                    name="Select"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      // Add your logic to handle file selection here
+                    }}
+                  />
+                  <TextField
+                    type="text"
+                    value={'' /* Add your state value here */}
+                    fullWidth
+                    readOnly
+                    onClick={(e) => {
+                      const fileInput = document.getElementById('icon-upload');
+                      if (fileInput) {
+                        fileInput.click();
+                      }
+                    }}
+                    sx={{
+                      background: '#262626',
+                      borderRadius: '12px',
+                      marginBottom: '1rem',
+                      cursor: 'pointer',
+                    }}
+                  />
+                </label>
+              </Grid>
+            </Grid>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '20px',
+              }}
+            >
+              <Button
+                variant="contained"
+                sx={{
+                  background:
+                    'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)',
+                  color: 'white',
+                  marginRight: '10px',
+                  width: '110px',
+                }}
+                type="submit"
+              >
+                Save
+              </Button>
+            </div>
+          </form>
+        </Paper>
+      </Modal>
 
+      {/* View Service Modal */}
+      <Modal
+        open={isViewModalOpen}
+        onClose={handleCloseViewModal}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Paper
+          style={{
+            padding: '2rem',
+            background: 'black',
+            width: '800px',
+            borderRadius: '18px',
+          }}
+        >
+          <IconButton
+            onClick={handleCloseViewModal}
+            sx={{ position: 'absolute', top: 0, right: 0 }}
+          >
+            <IconX />
+          </IconButton>
+          <Typography
+            variant="h6"
+            style={{
+              marginBottom: '1rem',
+              color: 'white',
+              display: 'relative',
+              textAlign: 'center', // Center-align the text
+            }}
+          >
+            View Service
+          </Typography>
+          <div style={{ padding: '1rem', color: 'white' }}>
+            <Typography variant="subtitle1">Name:</Typography>
+            <Typography>{selectedService ? selectedService.name : ''}</Typography>
+            <Typography variant="subtitle1">Service URL:</Typography>
+            <Typography>{selectedService ? selectedService.url : ''}</Typography>
+            <Typography variant="subtitle1">Description:</Typography>
+            <Typography>{selectedService ? selectedService.description : ''}</Typography>
+            <Typography variant="subtitle1">Icon:</Typography>
+            {/* Display the selectedService.icon here */}
+          </div>
+        </Paper>
+      </Modal>
+
+      {/* Edit Service Modal */}
+      <Modal
+        open={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Paper
+          style={{
+            padding: '2rem',
+            background: 'black',
+            width: '800px',
+            borderRadius: '18px',
+          }}
+        >
+          <IconButton
+            onClick={handleCloseEditModal}
+            sx={{ position: 'absolute', top: 0, right: 0 }}
+          >
+            <IconX />
+          </IconButton>
+          <Typography
+            variant="h6"
+            style={{
+              marginBottom: '1rem',
+              color: 'white',
+              display: 'relative',
+              textAlign: 'center', // Center-align the text
+            }}
+          >
+            Edit Service
+          </Typography>
+          <form onSubmit={handleEditSubmit} style={{ width: '100%' }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Name
+                </Typography>
+                <TextField
+                  name="name"
+                  value={selectedService ? selectedService.name : ''}
+                  onChange={() => {} /* Add your change handler here */}
+                  fullWidth
+                  sx={{ background: '#262626', borderRadius: '12px' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Service URL
+                </Typography>
+                <TextField
+                  name="serviceUrl"
+                  value={selectedService ? selectedService.url : ''}
+                  onChange={() => {} /* Add your change handler here */}
+                  fullWidth
+                  sx={{ background: '#262626', borderRadius: '12px' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Description
+                </Typography>
+                <TextField
+                  name="description"
+                  value={selectedService ? selectedService.description : ''}
+                  onChange={() => {} /* Add your change handler here */}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  sx={{ background: '#262626', borderRadius: '12px' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Icon
+                </Typography>
+                <label
+                  htmlFor="icon-upload-edit"
+                  style={{ width: '100%', cursor: 'pointer' }}
+                >
+                  <input
+                    id="icon-upload-edit"
+                    name="Select"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      // Add your logic to handle file selection here
+                    }}
+                  />
+                  <TextField
+                    type="text"
+                    value={'' /* Add your state value here */}
+                    fullWidth
+                    readOnly
+                    onClick={(e) => {
+                      const fileInput = document.getElementById('icon-upload-edit');
+                      if (fileInput) {
+                        fileInput.click();
+                      }
+                    }}
+                    sx={{
+                      background: '#262626',
+                      borderRadius: '12px',
+                      marginBottom: '1rem',
+                      cursor: 'pointer',
+                    }}
+                  />
+                </label>
+              </Grid>
+            </Grid>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '20px',
+              }}
+            >
+              <Button
+                variant="contained"
+                sx={{
+                  background:
+                    'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)',
+                  color: 'white',
+                  marginRight: '10px',
+                  width: '110px',
+                }}
+                type="submit"
+              >
+                Save
+              </Button>
+            </div>
+          </form>
+        </Paper>
+      </Modal>
+
+      {/* Delete Service Modal */}
+      <Modal
+        open={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Paper
+          style={{
+            padding: '2rem',
+            background: 'black',
+            width: '500px',
+            borderRadius: '18px',
+          }}
+        >
+          <IconButton
+            onClick={handleCloseDeleteModal}
+            sx={{ position: 'absolute', top: 0, right: 0 }}
+          >
+            <IconX />
+          </IconButton>
+          <Typography
+            variant="h6"
+            style={{
+              marginBottom: '1rem',
+              color: 'white',
+              display: 'relative',
+              textAlign: 'center', // Center-align the text
+            }}
+          >
+            Delete Service
+          </Typography>
+          <Typography variant="subtitle1" sx={{ color: 'white' }}>
+            Are you sure you want to delete this service?
+          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px',
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                background: 'red',
+                color: 'white',
+                marginRight: '10px',
+                width: '110px',
+              }}
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                background:
+                  'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)',
+                color: 'white',
+                width: '110px',
+              }}
+              onClick={handleCloseDeleteModal}
+            >
+              Cancel
+            </Button>
+          </div>
+        </Paper>
+      </Modal>
     </div>
   );
 };

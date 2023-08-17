@@ -65,6 +65,14 @@ const Appointments = () => {
     // Handle the discard logic here
   };
 
+  const handlefreeClick = () => {
+ 
+  };
+
+  const handlepaidClick = () => {
+
+  };
+
   return (
     <div>
       <Typography variant="h4" sx={{ color: 'white', marginBottom: 2 }}>
@@ -186,14 +194,31 @@ const Appointments = () => {
       <div style={{ display: 'flex', marginTop: '20px' }}>
         <Button
           variant="contained"
-          sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px', width: '110px' }}
+          sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px', width: '80px' }}
+          onClick={handlefreeClick}
+        >
+          Free
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: '#131392',width: '80px' }}
+          onClick={handlepaidClick}
+        >
+          Paid
+        </Button>
+      </div>
+
+      <div style={{ display: 'flex', marginTop: '20px' }}>
+        <Button
+          variant="contained"
+          sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px', width: '130px' }}
           onClick={handleSaveClick}
         >
           Save
         </Button>
         <Button
           variant="outlined"
-          sx={{ borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: '#131392',width: '110px' }}
+          sx={{ borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: '#131392',width: '130px' }}
           onClick={handleDiscardClick}
         >
           Discard
