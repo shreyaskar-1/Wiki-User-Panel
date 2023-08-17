@@ -10,6 +10,7 @@ import {
   Input,
 } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 const Appointments = () => {
   const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -36,9 +37,9 @@ const Appointments = () => {
     setAppointments(newAppointments);
   };
 
-  const handleAddTimeSlot = () => {
+  const handleAddTimeSlot = (index) => () => {
     const newAppointments = [...appointments];
-    newAppointments.push({
+    newAppointments.splice(index + 1, 0, {
       day: '',
       open: '',
       close: '',
@@ -119,19 +120,16 @@ const Appointments = () => {
                     sx={{ color: 'white', cursor: 'pointer' }}
                   />
                 </Grid>
+                <Grid item xs={1}>
+                  <AddIcon
+                    onClick={handleAddTimeSlot(index)}
+                    sx={{ color: 'white', cursor: 'pointer' }}
+                  />
+                </Grid>
               </Grid>
             </Grid>
           ))}
         </Grid>
-        <div style={{ display: 'flex', marginTop: '20px' }}>
-          <Button
-            variant="contained"
-            sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px', }}
-            onClick={handleAddTimeSlot}
-          >
-            Add Time Slot
-          </Button>
-        </div>
       </FormControl>
 
       {/* Confirmation Modal */}
