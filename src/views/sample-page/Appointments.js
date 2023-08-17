@@ -8,6 +8,7 @@ import {
   Modal,
   Paper,
   Input,
+  TextField,
 } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
@@ -24,6 +25,8 @@ const Appointments = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedToDelete, setSelectedToDelete] = useState(null);
+  const [isPaid, setIsPaid] = useState(false); // Added state for Paid button
+  const [amount, setAmount] = useState('');
 
   const handleCheckboxChange = (index) => (event) => {
     const newAppointments = [...appointments];
@@ -66,11 +69,12 @@ const Appointments = () => {
   };
 
   const handlefreeClick = () => {
- 
+    setIsPaid(false);
+    setAmount('');
   };
 
   const handlepaidClick = () => {
-
+    setIsPaid(true);
   };
 
   return (
@@ -191,22 +195,36 @@ const Appointments = () => {
         </Paper>
       </Modal>
 
-      <div style={{ display: 'flex', marginTop: '20px' }}>
+      <div style={{ marginTop: '20px' }}>
         <Button
           variant="contained"
-          sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px', width: '80px' }}
+          sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px' }}
           onClick={handlefreeClick}
         >
           Free
         </Button>
         <Button
           variant="outlined"
-          sx={{ borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: '#131392',width: '80px' }}
+          sx={{ borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: '#131392' }}
           onClick={handlepaidClick}
         >
           Paid
         </Button>
       </div>
+
+      {isPaid && (
+        <div style={{ marginTop: '20px' }}>
+          <Typography variant="body1" sx={{ color: 'white' }}>
+            Amount:
+          </Typography>
+          <TextField
+            value={amount}
+            onChange={(event) => setAmount(event.target.value)}
+            fullWidth
+            sx={{ background: '#262626', borderRadius: '12px', marginTop: '6px' , maxWidth:'50%' }}
+          />
+        </div>
+      )}
 
       <div style={{ display: 'flex', marginTop: '20px' }}>
         <Button
