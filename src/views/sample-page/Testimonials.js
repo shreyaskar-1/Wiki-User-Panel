@@ -16,8 +16,12 @@ import {
   MenuItem,
   Select,
   Box,
+  Modal,
+  Paper,
+  IconButton,
 } from '@mui/material';
-import { AddCircleOutline, MoreVert } from '@mui/icons-material';
+import { AddCircleOutline, MoreVert, Close } from '@mui/icons-material';
+import { IconX } from '@tabler/icons';
 
 const TableCells = ({ borderRadius, color, type, data }) => (
   <TableCell
@@ -35,6 +39,12 @@ const Testimonials = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchInput, setSearchInput] = useState('');
   const [filteredTestimonials, setFilteredTestimonials] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    image: null,
+  });
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -55,6 +65,36 @@ const Testimonials = () => {
       testimonial.name.toLowerCase().includes(searchInput.toLowerCase())
     );
     setFilteredTestimonials(filtered);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      image: file,
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Handle the form submission logic here
+    console.log(formData);
   };
 
   return (
@@ -95,13 +135,14 @@ const Testimonials = () => {
             color: 'white',
             marginRight: '1rem',
           }}
+          onClick={handleOpenModal}
         >
           Add Testimonial
         </Button>
       </Grid>
       <Card style={{ marginTop: '2rem', backgroundColor: 'black' }}>
         <CardContent>
-          <TableContainer>
+        <TableContainer>
             <Table>
               <TableHead>
                 <TableRow
@@ -218,6 +259,111 @@ const Testimonials = () => {
           Showing {filteredTestimonials.length} Results
         </Typography>
       </div>
+
+      {/* Modal for adding a new testimonial */}
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Paper
+          style={{
+            padding: '2rem',
+            background: 'black',
+            width: '800px',
+            borderRadius: '18px',
+          }}
+        >
+          <IconButton
+            onClick={handleCloseModal}
+            sx={{ position: 'absolute', top: 0, right: 0 }}
+          >
+            <IconX />
+          </IconButton>
+          <Typography
+            variant="h6"
+            style={{
+              marginBottom: '1rem',
+              color: 'white',
+              display: 'relative',
+              textAlign: 'center',
+            }}
+          >
+            Add New Testimonial
+          </Typography>
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Name
+                </Typography>
+                <TextField
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  fullWidth
+                  sx={{ background: '#262626', borderRadius: '12px', width: '100%' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Description
+                </Typography>
+                <TextField
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  sx={{ background: '#262626', borderRadius: '12px', width: '100%' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  Image
+                </Typography>
+                <label htmlFor="image-upload" style={{ width: '100%', cursor: 'pointer' }}>
+                  <input
+                    id="image-upload"
+                    name="Select"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleImageChange}
+                  />
+                  <TextField
+                    type="text"
+                    value={formData.image ? formData.image.name : ''}
+                    fullWidth
+                    readOnly
+                    onClick={(e) => {
+                      const fileInput = document.getElementById('image-upload');
+                      if (fileInput) {
+                        fileInput.click();
+                      }
+                    }}
+                    sx={{ background: '#262626', borderRadius: '12px', marginBottom: '1rem', cursor: 'pointer', width: '100%' }}
+                  />
+                </label>
+              </Grid>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <Button
+                  variant="contained"
+                  sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px', width: '110px' }}
+                  type="submit"
+                >
+                  Save
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
+      </Modal>
     </div>
   );
 };

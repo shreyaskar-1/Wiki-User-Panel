@@ -11,7 +11,7 @@ const baselightTheme = createTheme({
       dark: '#262626',
     },
     secondary: {
-      main: '#49BEFF',
+      main: 'rgba(163, 16, 192, 1)',
       light: '#E8F7FF',
       dark: '#23afdb',
     },

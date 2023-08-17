@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
-import { Typography, Button, Grid, Checkbox, FormControl, InputLabel, Select, MenuItem, TextField } from '@mui/material';
+import {
+  Typography,
+  Button,
+  Grid,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 
 const BusinessHoursTab = () => {
   const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  const [businessHours, setBusinessHours] = useState(weekdays.map((day) => ({
-    day: day,
-    open: '',
-    close: '',
-    isOpen: false,
-  })));
+  const [businessHours, setBusinessHours] = useState(
+    weekdays.map((day) => ({
+      day: day,
+      open: '',
+      close: '',
+      isOpen: false,
+    }))
+  );
 
   const handleCheckboxChange = (index) => (event) => {
     const newBusinessHours = [...businessHours];
@@ -55,36 +67,26 @@ const BusinessHoursTab = () => {
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
-                  <Select
+                  <TextField
+                    type="time"
                     value={day.open}
-                    disabled={!day.isOpen}
                     onChange={handleTimeChange(index, 'open')}
-                    sx={{ color: 'white', border: '1px solid #262626' }}
-                  >
-                    {/* Replace with your timing options */}
-                    <MenuItem value="8:00 AM">8:00 AM</MenuItem>
-                    <MenuItem value="9:00 AM">9:00 AM</MenuItem>
-                    {/* ... */}
-                  </Select>
-                  </Grid>
-                  <Grid item xs={1}>
+                    InputProps={{ sx: { color: 'white', border: '1px solid #262626' } }}
+                  />
+                </Grid>
+                <Grid item xs={1}>
                   <Typography variant="body1" sx={{ color: 'white' }}>
                     To
                   </Typography>
-                  </Grid>
-                  <Grid item xs={1}>
-                  <Select
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    type="time"
                     value={day.close}
-                    disabled={!day.isOpen}
                     onChange={handleTimeChange(index, 'close')}
-                    sx={{ color: 'white' , border: '1px solid #262626' }}
-                  >
-                    {/* Replace with your timing options */}
-                    <MenuItem value="5:00 PM">5:00 PM</MenuItem>
-                    <MenuItem value="6:00 PM">6:00 PM</MenuItem>
-                    {/* ... */}
-                  </Select>
-                  </Grid>
+                    InputProps={{ sx: { color: 'white', border: '1px solid #262626' } }}
+                  />
+                </Grid>
               </Grid>
             </Grid>
           ))}
@@ -93,14 +95,21 @@ const BusinessHoursTab = () => {
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
         <Button
           variant="contained"
-          sx={{ background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: 'white', marginRight: '10px' }}
+          sx={{
+            background: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)',
+            color: 'white',
+            marginRight: '10px',
+          }}
           onClick={handleSaveClick}
         >
           Save
         </Button>
         <Button
           variant="outlined"
-          sx={{ borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)', color: '#131392' }}
+          sx={{
+            borderColor: 'linear-gradient(19.95deg, #131392 15.26%, #A310C0 154.02%)',
+            color: '#131392',
+          }}
           onClick={handleDiscardClick}
         >
           Discard

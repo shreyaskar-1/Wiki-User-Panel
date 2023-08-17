@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Typography, Button, Grid, Checkbox, FormControl, Select, MenuItem } from '@mui/material';
 import Icon1 from 'src/assets/images/icons/delete.png';
 import Icon2 from 'src/assets/images/icons/add.png';
-import { IconPlus } from '@tabler/icons';
+
 
 const Appointments = () => {
   const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
